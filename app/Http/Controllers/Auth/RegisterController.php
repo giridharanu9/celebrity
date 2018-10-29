@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\UserInfo;
 use App\UserActivity;
+use Illuminate\Http\Request;
+use Response;
 
 class RegisterController extends Controller
 {
@@ -29,8 +31,8 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
-
+   // protected $redirectTo = '/home';
+    //protected $redirectTo = redirect()->back();
     /**
      * Create a new controller instance.
      *
@@ -72,5 +74,36 @@ class RegisterController extends Controller
             'referel_code' => uniqid(),    
         ]);
  
+    }
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $input = $request->all();
+
+        if ($validator->passes()) {
+            return User::create([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'password' => bcrypt($request->get('password')),
+                'type' => 2,   
+                'referel_code' => uniqid(),    
+            ]);
+            // Store your user in database 
+
+            //return Response::json(['success' => '1']);
+
+        }
+        
+        return Response::json(['errors' => $validator->errors()]);
+    }
+
+    protected function redirectTo()
+    {
+        return url()->previous();
     }
 }

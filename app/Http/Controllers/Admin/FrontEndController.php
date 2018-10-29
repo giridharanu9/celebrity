@@ -138,6 +138,39 @@ class FrontEndController extends Controller
        		    
 	}
 
+    public function autoSearchCelebrity(Request $request)
+    {
+       // dd($request->term);
+        $searchText = $request;
+        $celebrities =Celebrity::where('name','LIKE','%'.$request->term.'%')->get();;
+
+        if($request->categoryid) 
+            $celebrity->where('categoryid',$request->categoryid);
+        if($request->gender) 
+            $celebrity->where('gender',$request->gender);
+        if($request->age) 
+            $celebrity->where('age','<',$request->age);
+        if($request->activity == 'like')
+            $celebrity->orderBy('like_count','desc');
+        if($request->activity == 'dislike')
+            $celebrity->orderBy('like_count','asc');
+        if($request->activity == 'follow')
+            $celebrity->orderBy('follow_count','desc');
+
+        $data=array();
+        foreach ($celebrities as $celebrity) {
+                $data[]=array('value'=>$celebrity->name,'id'=>$celebrity->id);
+        }
+        if(count($data))
+             return $data;
+        else
+            return ['value'=>'No Result Found','id'=>''];
+
+        //$celebrity = $celebrity->get();
+        //return view('Frontend.view_search',compact('celebrity'))->withDetails($celebrity)->withQuery ( $searchText );
+                
+    }
+
 	public function addFavorite($id)
 	{
 		if(!$favorites = Favorites::where('user_id',\Auth::user()->id)->where('celebrity_id',$id)->first())
