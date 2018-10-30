@@ -21,13 +21,13 @@
 					<a href="{{url('/')}}"><img src="{{url('assets/2.png')}}" height="100px" width="200px"></a>
 				</div>
 				<div class="col-md-6" align="right"><br>
-					
+
 					  @guest
                             <a href="{{ route('login') }}"  class="btn btn-default">Login</a>
                             <a href="{{ route('register') }}"  class="btn btn-default">Register</a>
                         @else
 					<a href="{{ url('/logout') }}" class="btn btn-default">Logout</a>
-                          
+
 					<a href="{{ url('/user/'.Auth::user()->id) }}" class="btn btn-default">Your Profile</a>
 
                         @endguest
@@ -104,12 +104,12 @@
         </div>
 	</div><br><br><br>
 
-		
+
 		<div class="row">
 
 			<div class="col-xs-12">
 				<div  style="padding-left: 12px;">
-					ACTORS<br><br>
+					ACTORS <br><br>
 					<a href="{{url('/')}}" class="btn btn-default">ALL</a>
 					<a href="{{url('actors')}}" class="btn btn-default">ACTORS</a>
 					<a href="{{url('actress')}}" class="btn btn-default">ACTRESS</a>
@@ -125,7 +125,7 @@
 				<div class="panel" style="border:1px solid black; height: 250px;">
                		<div class="panel-body text-center">
 	                   <a href="{{url('view_celebrity/'.$celeb->id)}}"><p><img class="img-fluid" src="{{url('/public/uploads/celebrity/'.$celeb->id.'/'.$celeb->image)}}" alt="card image" height="150px" width="100%"></p>
-	                    <h4 class="panel-title"  style="color: black;">{{$celeb->name}}</h4><br> </a> 
+	                    <h4 class="panel-title"  style="color: black;">{{$celeb->name}}</h4><br> </a>
 					  	<?php $like = App\Likes::where('likes','1')->where('celebrity_id',$celeb->id)->count(); ?>
 					  	<?php $unlike = App\Likes::where('likes','0')->where('celebrity_id',$celeb->id)->count(); ?>
 					  	<a href="{{url('celeb_like/'.$celeb->id)}}"><i class="fa fa-thumbs-up"></i></a> {{$like}}
@@ -136,7 +136,7 @@
 			@endforeach
         </div>
 		</div>
-		
+
 
 </div>
 
@@ -166,13 +166,13 @@
 		@endif
 		@endif
 	</div>
-	
+
 	<div class="footer col-xs-12" align="center" style="background-color: #1b3b4b;" >
 		<div class="col-md-8 col-md-push-3">
 			<ul class="nav navbar-nav">
 				<li><a href="{{url('home')}}">HOME</a></li>
-				<li><a href="{{url('home')}}">ADVERTISEMNET WITH US</a></li>
-				<li><a href="{{url('home')}}">PARTNER WITH US</a></li>
+				<li><a href="{{url('advertisement_with_us')}}">ADVERTISEMNET WITH US</a></li
+				<li><a href="{{url('partner_with_us')}}">PARTNER WITH US</a></li>
 				<li><a href="{{url('about_us')}}"> SOCIAL MEDIA </a></li>
 				<li><a href="{{url('about_us')}}"> ABOUT US </a></li>
 				<li><a href="{{url('contact_us')}}"> CONTACT US </a></li>
@@ -185,7 +185,7 @@
 </html>
 
 <script type="text/javascript">
-	
+
 $(function()
 {
 	 $( "#search" ).searchCelebrity({

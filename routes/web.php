@@ -38,11 +38,11 @@ Route::group(
 		'namespace' => 'Admin', //folder
 		'middleware' => 'App\Http\Middleware\AdminMiddleware'
 	], function() {
-		
+
 		Route::match(['get', 'post'], '/', 'AdminController@index');
 		Route::get('/changepassword', 'AdminController@changepassword');
 		Route::post('/changepassword', 'AdminController@savenewpassword')->name('admin.changepassword');
-		
+
 		Route::resource('poll', 'PollController');
 		Route::post('/poll/changestatus', 'PollController@changestatus');
 		Route::post('/poll/listDatatable', 'PollController@listDatatable');
@@ -80,12 +80,12 @@ Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteContro
 Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Admin\FrontEndController@autoSearchCelebrity'));
 
 Route::post('user-login', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
-// close Autocomplete 
+// close Autocomplete
 
 Route::post('celebrity_questions', 'Admin\FrontEndController@CelebrityQuestion');
 Route::group(['middleware' => 'auth'], function()
 {
-	
+
 Route::get('celeb_like/{id}','Admin\FrontEndController@celebLike');
 Route::get('add_favorite/{id}','Admin\FrontEndController@addFavorite');
 Route::get('remove_favorite/{id}','Admin\FrontEndController@removeFavorite');
@@ -121,3 +121,15 @@ Route::get('view_polls', 'Admin\FrontPageController@viewPolls');
 
 Route::post('add_activity', 'Admin\ActivityController@addActivity');
 Route::get('manage_activity', 'Admin\ActivityController@manageActivity');
+
+##about us
+Route::get('about_us', 'Admin\FrontPageController@getAboutUs');
+
+##contact us
+Route::get('contact_us', 'Admin\FrontPageController@getContactUs');
+
+##Partner with us
+Route::get('partner_with_us', 'Admin\FrontPageController@getPartner');
+
+##Advertisement with us
+Route::get('advertisement_with_us', 'Admin\FrontPageController@getAdvertisement');

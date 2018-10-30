@@ -104,7 +104,7 @@ class FrontPageController extends Controller
 		if(!$users_follow = UsersFollow::where('followed_by',\Auth::user()->id)->where('follow_to',$id)->where('follow',1)->first())
 		{
 			$users_follow = new UsersFollow;
-		
+
 
 	        $output = "success";
 
@@ -186,7 +186,7 @@ class FrontPageController extends Controller
     	 $users_info->total_points = $users_info->total_points-1;
          $users_info->save();
 
-	     
+
 	     //user info table
 	     if(!$users_info = UsersInfo::where('user_id',\Auth::user()->id)->first())
 	     $users_info = new UsersInfo;
@@ -205,14 +205,14 @@ class FrontPageController extends Controller
 		if(!$polls_respond = PollsRespond::where('user_id',\Auth::user()->id)->where('poll_id',$id)->first())
 
 			$polls_respond = new PollsRespond;
-        
+
         $output = "poll";
 
         $polls_respond->user_id = \Auth::user()->id;
         $polls_respond->poll_id = $id;
         $polls_respond->poll_option = $request->poll_option;
         //dd($polls_respond->poll_option);
-        
+
         $polls_respond->save();
 
         $activity = new UserActivity;
@@ -238,7 +238,7 @@ class FrontPageController extends Controller
 	{
 		$user = User::find($id);
 	    $output = "reference";
-        
+
         $user->reference_code = $request->reference_code;
         $reference_given_by = User::select('id')->where('referel_code',$user->reference_code)->first();
         $user->save();
@@ -285,7 +285,7 @@ class FrontPageController extends Controller
 
 
 		if(!$activity = UserActivity::where('user_id',\Auth::user()->id)->where('activity_id','=','17')->first())
-        
+
         $activity = new UserActivity;
         $activity->user_id =\Auth::user()->id;
         $activity->activity_id = 17;
@@ -304,4 +304,25 @@ class FrontPageController extends Controller
 
         return redirect()->back()->with('output',$output);
 	}
+
+		public function getAboutUs()
+		{
+			return view('Frontend.about_us');
+		}
+
+		public function getContactUs()
+		{
+			return view('Frontend.contact_us');
+		}
+
+		public function getPartner()
+		{
+			return view('Frontend.partner_with_us');
+		}
+
+		public function getAdvertisement()
+		{
+			return view('Frontend.advertisement_with_us');
+		}
+
 }

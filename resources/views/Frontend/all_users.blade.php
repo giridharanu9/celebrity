@@ -173,8 +173,8 @@
 		<div class="col-md-8 col-md-push-3">
 			<ul class="nav navbar-nav">
 				<li><a href="{{url('home')}}">HOME</a></li>
-				<li><a href="{{url('home')}}">ADVERTISEMNET WITH US</a></li>
-				<li><a href="{{url('home')}}">PARTNER WITH US</a></li>
+				<li><a href="{{url('advertisement_with_us')}}">ADVERTISEMNET WITH US</a></li>
+				<li><a href="{{url('partner_with_us')}}">PARTNER WITH US</a></li>
 				<li><a href="{{url('about_us')}}"> SOCIAL MEDIA </a></li>
 				<li><a href="{{url('about_us')}}"> ABOUT US </a></li>
 				<li><a href="{{url('contact_us')}}"> CONTACT US </a></li>
