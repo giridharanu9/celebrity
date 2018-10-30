@@ -417,8 +417,9 @@
 <div class="col-md-4">
 	<h4>Rate Your Celebrity</h4>
 	<table>
-		@foreach($questions as $row)
 		<form class="poststars" action="{{url('rating/'.$celebrity->id)}}" id="addStar" method="POST">
+		@foreach($questions as $row)
+		<!-- <form class="poststars" action="{{url('rating/'.$celebrity->id)}}" id="addStar" method="POST"> -->
 
 			<div class="star-rating">
 				{{ csrf_field() }}
@@ -426,25 +427,25 @@
 
 				<?php $ratings = App\Ratings::where('celebrity_id',$celebrity->id)->where('question_id',$row->id)->where('user_id',Auth::user()->id)->first(); 
 				?>
-				<input type="hidden" name="question_id" value="{{$row->id}}">
-				<tr>
+				<input type="hidden" name="question_id[]" value="{{$row->id}}">
+				<tr class="ratingrow">
 					<td><br><span class="field-label-header"><b>{{$row->skill}}</b></span><br></td>
 					<td><br>
 						@if($ratings)
 						<fieldset class="rating">
-							<input type="radio" id="star5{{$row->id}}" name="rating{{$row->id}}" value="5" checked /><label class = "full" for="star5{{$row->id}}" @if($ratings->ratings >= '5')  style="background-color: rgb(126, 211, 33);" @endif ></label>
+							<input type="radio" class="fivestor" id="star5{{$row->id}}" name="rating{{$row->id}}" value="5" @if($ratings->ratings >= '5')  checked @endif  /><label class = "full fivestor" for="star5{{$row->id}}" @if($ratings->ratings >= '5')  style="background-color: rgb(126, 211, 33);" @endif ></label>
 
-							<input type="radio" id="star4{{$row->id}}" name="rating{{$row->id}}" value="4" /><label class = "full" for="star4{{$row->id}}" @if($ratings->ratings >= '4')  style="background-color: rgb(126, 211, 33);" @endif ></label>
+							<input type="radio" id="star4{{$row->id}}" name="rating{{$row->id}}" value="4" @if($ratings->ratings >= '4' && $ratings->ratings < '5')  checked @endif /><label class = "full" for="star4{{$row->id}}" @if($ratings->ratings >= '4')  style="background-color: rgb(126, 211, 33);" @endif ></label>
 
-							<input type="radio" id="star3{{$row->id}}" name="rating{{$row->id}}" value="3" /><label class = "full" for="star3{{$row->id}}" @if($ratings->ratings >= '3')  style="background-color: rgb(126, 211, 33);" @endif ></label>
+							<input type="radio" id="star3{{$row->id}}" name="rating{{$row->id}}" value="3" @if($ratings->ratings >= '3' && $ratings->ratings < '4')  checked @endif /><label class = "full" for="star3{{$row->id}}" @if($ratings->ratings >= '3')  style="background-color: rgb(126, 211, 33);" @endif ></label>
 
-							<input type="radio" id="star2{{$row->id}}" name="rating{{$row->id}}" value="2" /><label class = "full" for="star2{{$row->id}}" @if($ratings->ratings >= '2')  style="background-color: rgb(126, 211, 33);" @endif ></label>
+							<input type="radio" id="star2{{$row->id}}" name="rating{{$row->id}}" value="2" @if($ratings->ratings >= '2' && $ratings->ratings < '3')  checked @endif /><label class = "full" for="star2{{$row->id}}" @if($ratings->ratings >= '2')  style="background-color: rgb(126, 211, 33);" @endif ></label>
 
-							<input type="radio" id="star1{{$row->id}}" name="rating{{$row->id}}" value="1" /><label class = "full" for="star1{{$row->id}}" @if($ratings->ratings >= '1')  style="background-color: rgb(126, 211, 33);" @endif ></label>
+							<input type="radio" id="star1{{$row->id}}" name="rating{{$row->id}}" value="1" @if($ratings->ratings >= '1' && $ratings->ratings < '2')  checked @endif /><label class = "full" for="star1{{$row->id}}" @if($ratings->ratings >= '1')  style="background-color: rgb(126, 211, 33);" @endif ></label>
 						</fieldset>
 						@else
 						<fieldset class="rating">
-							<input type="radio" id="star5{{$row->id}}" name="rating{{$row->id}}" value="5" checked /><label class = "full"  for="star5{{$row->id}}"></label>
+							<input type="radio" class="fivestor" id="star5{{$row->id}}" name="rating{{$row->id}}" value="5" /><label class = "full fivestor"  for="star5{{$row->id}}"></label>
 
 							<input type="radio" id="star4{{$row->id}}" name="rating{{$row->id}}" value="4" /><label class = "full" for="star4{{$row->id}}"></label>
 
@@ -452,18 +453,27 @@
 
 							<input type="radio" id="star2{{$row->id}}" name="rating{{$row->id}}" value="2" /><label class = "full" for="star2{{$row->id}}"></label>
 
-							<input type="radio" id="star1{{$row->id}}" name="rating{{$row->id}}" value="1" /><label class = "full" for="star1{{$row->id}}"></label>
+							<input type="radio" id="star1{{$row->id}}" name="rating{{$row->id}}" value="1" checked /><label class = "full" for="star1{{$row->id}}"></label>
 						</fieldset>
 						@endif
 					&emsp;</td>
 
-					<td><br><button type="submit" class="btn btn-success">Rate Us</button></td>
+					<td><br><button type="button" class="btn btn-success five-star-rating">Rate 5 Star</button></td>
 				</tr>
-
-			</div>
-		</form>
+				
+		<!-- </form> -->
 
 		@endforeach
+		
+		</form>
+		<div>
+			<tr>
+				<td>
+					<button type="submit" class="btn btn-success">Submit Rating</button>
+				</td>
+			</tr>
+		</div>	
+		
 	</table>
 </div>
 @endguest
@@ -691,6 +701,15 @@ $("label").click(function(){
 	$(this).parent().find("label").css({"background-color": "#D8D8D8"});
 	$(this).css({"background-color": "#7ED321"});
 	$(this).nextAll().css({"background-color": "#7ED321"});
+});
+
+$(".five-star-rating").click(function(){
+	console.log('click function');
+	$(this).parents('.ratingrow').find('.fivestor').prop("checked", true).trigger("click");
+	$(this).parents('.ratingrow').find('.fivestor').prop("checked", true).trigger("click");
+	setTimeout(function(){
+	 $( ".poststars" ).submit();
+	  }, 2000)
 });
 
 </script>

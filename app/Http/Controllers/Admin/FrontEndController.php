@@ -411,7 +411,7 @@ class FrontEndController extends Controller
 		
 	}
 
-	public function rating(Request $request,$id)
+	public function rating_old(Request $request,$id)
 	{
       
 		//rating table entry
@@ -447,5 +447,42 @@ class FrontEndController extends Controller
 		
 	}
 
+    public function rating(Request $request,$id)
+        {
+           // print_r($request->Input('question_id'));
+           // dd($request->all());
+           foreach ($request->Input('question_id') as $question_id) {
+            //echo $question_id;die;
+                //rating table entry
+                if(!$ratings = Ratings::where('user_id',\Auth::user()->id)->where('celebrity_id',$id)->where('question_id',$question_id)->first()){
+                    $ratings = new Ratings;
 
+                    $users_info = UsersInfo::where('user_id',\Auth::user()->id)->first();
+                    $users_info->total_points = $users_info->total_points+1;
+                    $users_info->save();
+                }
+
+                $output = "rate";
+
+                $ratings->user_id = \Auth::user()->id;
+                $ratings->ratings = \Input::get('rating'.$question_id);
+                // dd('rating'.$request->question_id);
+                $ratings->celebrity_id = $id;
+                $ratings->question_id = $question_id;
+
+                $ratings->save();
+
+                //user activity table entry
+
+                $activity = new UserActivity;
+                $activity->user_id = \Auth::user()->id;
+                $activity->activity_id = 15;
+                $activity_points = Activity::select('points')->where('id','15')->first();
+                $activity->points = $activity_points->points;
+                $activity->save();
+
+               
+            }
+             return redirect()->back()->with('output',$output);
+    }
 }
