@@ -74,6 +74,14 @@ Route::get('user/{id}','Admin\FrontEndController@user');
 Route::post('save_user', 'Admin\FrontEndController@saveUser');
 Route::get('user_profile/{id}', 'Admin\FrontEndController@userProfile');
 Route::get('celebrity/search', 'Admin\FrontEndController@searchCelebrity');
+
+// For autocomplete
+Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteController@index'));
+Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Admin\FrontEndController@autoSearchCelebrity'));
+
+Route::post('user-login', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
+// close Autocomplete 
+
 Route::post('celebrity_questions', 'Admin\FrontEndController@CelebrityQuestion');
 Route::group(['middleware' => 'auth'], function()
 {

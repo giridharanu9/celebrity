@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
 use Session;
-
+use Illuminate\Http\Request;
+use Response;
+use URL;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
 class LoginController extends Controller
 {
     /*
@@ -28,19 +32,22 @@ class LoginController extends Controller
      * @var string
      */
 
-    //   protected function authenticated($request, $user)
-    // {
-    //     if($user->type == '1') {
-    //         return redirect('/admin');
-    //     }
+      protected function authenticated($request, $user)
+    {
+        if($user->type == '1') {
+            return redirect('/admin');
+        }
 
        
-    //     else 
-    //     {
-    //         return redirect('/user');
-    //     } 
+        else 
+        {
+            //return redirect('/user');
+            return redirect()->back();
 
-    // }
+
+        } 
+
+    }
 
 
 
@@ -61,5 +68,28 @@ class LoginController extends Controller
         Session::flush();
         Auth::logout();
         return redirect('/');
+    }
+    protected function authenticatedCustomLogin(Request $request)
+    {
+        $validator = \Validator::make($request->all() , [
+          'email' => 'required|email|max:255',
+          'password' => 'required|min:6',
+        ]);
+
+      if($validator->fails()) { 
+            return response()->json(['success' => false, 'errors' => $validator->errors()->all()]);
+        } else {
+            // create our user data for the authentication
+            $userdata = array(
+                'email'     => Input::get('email'),
+                'password'  => Input::get('password')
+            );
+            // attempt to do the login
+            if (Auth::attempt($userdata)) {
+                return response()->json(['success' => true, 'redirectto' => 'dashboard']);
+            } else {
+                return response()->json(['success' => false, 'error' => ['Login Failed! Username and password is incorrect.']]);
+            }
+        }
     }
 }
