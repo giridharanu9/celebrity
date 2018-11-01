@@ -43,6 +43,12 @@ return [
 
     'disks' => [
 
+      // make driver to store images under storage/image folder
+      'image' => [
+        'driver' => 'local',
+        'root'   =>  storage_path().'/image',
+      ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

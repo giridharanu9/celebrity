@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Celebrity;
 use App\User;
 use App\UsersInfo;
@@ -15,6 +16,8 @@ use App\PollsRespond;
 use App\Subscribe;
 use App\Poll;
 use App\Category;
+use Log;
+
 
 class FrontPageController extends Controller
 {
@@ -323,6 +326,25 @@ class FrontPageController extends Controller
 		public function getAdvertisement()
 		{
 			return view('Frontend.advertisement_with_us');
+		}
+
+		public function exportCsv(Request $request){
+
+		$file =$request->file('file');
+		$filename = $file->getClientOriginalName();
+		$path = $file->getPathName(); //here pass actual path of the file sothat excel class can read the file
+	//  Log::info("csv file:".$filename);
+		$nameonly=preg_replace('/\..+$/', '', $file->getClientOriginalName());   //this will return name without extension
+
+		 $results = Excel::load($path,function($reader){
+		 })->get();
+
+	  Log::info("csv file ids:".$results);
+
+
+			return 'true';
+
+
 		}
 
 }

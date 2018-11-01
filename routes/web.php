@@ -65,6 +65,8 @@ Route::group(
 Route::get('/celebrity/polls', 'Admin\CelebrityController@polls')->name('celebrity.polls');
 Route::get('users_rating/{id}', 'Admin\CelebrityController@usersRating');
 Route::get('getlikesrank/{id}', 'Admin\CelebrityController@getCelebrityLikesRank');
+Route::get('celebrity/import_csv', 'Admin\CelebrityController@getImportCsv');
+Route::post('celebrity/upload_csv', 'Admin\CelebrityController@importCsv');
 
 //Frontend Controller
 
@@ -80,6 +82,8 @@ Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteContro
 Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Admin\FrontEndController@autoSearchCelebrity'));
 
 Route::post('user-login', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
+Route::get('celebrity/refreshcaptcha', 'Admin\FrontEndController@refreshCaptcha')->name('refreshcaptcha');
+Route::post('celebrity/sendFeedback', 'Admin\FrontEndController@sendFeedback');
 // close Autocomplete
 
 Route::post('celebrity_questions', 'Admin\FrontEndController@CelebrityQuestion');
@@ -133,3 +137,6 @@ Route::get('partner_with_us', 'Admin\FrontPageController@getPartner');
 
 ##Advertisement with us
 Route::get('advertisement_with_us', 'Admin\FrontPageController@getAdvertisement');
+
+##Export csv in bulk
+Route::post('export_csv', 'Admin\FrontPageController@exportCsv');

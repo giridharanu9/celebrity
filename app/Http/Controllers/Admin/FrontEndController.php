@@ -19,7 +19,8 @@ use App\Poll;
 use App\PollOptions;
 use App\UsersFollow;
 use App\CelebActivity;
-
+use Illuminate\Mail\Mailer;
+use Mail;
 class FrontEndController extends Controller
 {
 	public function home()
@@ -169,6 +170,29 @@ class FrontEndController extends Controller
         //$celebrity = $celebrity->get();
         //return view('Frontend.view_search',compact('celebrity'))->withDetails($celebrity)->withQuery ( $searchText );
                 
+    }
+
+    public function refreshCaptcha()
+    {
+       // die;
+        return response()->json(['captcha'=> captcha_img()]);
+    }
+
+    public function sendFeedback(Request $request)
+    {
+        $request->validate([
+            'feedback' => 'required',
+           'captcha' => 'required|captcha'
+        ]);
+        //echo "suceeess";
+        //return response()->json(['captcha'=> captcha_img()]);
+        $feedback = $request->input('feedback');
+        Mail::send('emails.welcome', ['feedback' => $feedback], function($message)
+        {
+            $message->to('ashishk.synergytop@gmail.com', 'ashish')->subject('Welcome!');
+        });
+        $output = "Feedback sent succesfully";
+        return redirect()->back()->with('output',$output);
     }
 
 	public function addFavorite($id)

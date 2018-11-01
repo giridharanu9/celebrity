@@ -152,6 +152,57 @@
 						</div><br>
 
 						<div class="row">
+							<div class="col-md-8 col-md-push-1">
+								 <h2>Give you feedback here</h2><br/>
+								      @if ($errors->any())
+								      <div class="alert alert-danger">
+								          <ul>
+								              @foreach ($errors->all() as $error)
+								                  <li>{{ $error }}</li>
+								              @endforeach
+								          </ul>
+								      </div><br />
+								      @endif
+								      @if(session('output'))
+									   <div class="feedback" style="font-size:24px;color:green;">{{session('output')}}</div>
+									  @endif
+								      <form method="post" action="{{url('celebrity/sendFeedback')}}">
+								        @csrf
+								        <div class="row">
+								          <div class="col-md-8"></div>
+								          <div class="form-group col-md-8">
+								            <label for="Name">Feedback:</label>
+								            <textarea class="form-control" name="feedback">
+								            	
+								            </textarea>
+								          </div>
+								        </div>
+								        <div class="row">
+								          <div class="col-md-8"></div>
+								          <div class="form-group col-md-8">
+								             <div class="captcha">
+								               <span>{!! captcha_img() !!}</span>
+								               <button type="button" class="btn btn-success"><i class="fa fa-refresh" id="refresh"></i></button>
+								               </div>
+								            </div>
+								        </div>
+								        <div class="row">
+								          <div class="col-md-4"></div>
+								            <div class="form-group col-md-4">
+								             <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha"></div>
+								          </div>
+								        <div class="row">
+								          <div class="col-md-4"></div>
+								          <div class="form-group col-md-4">
+								            <button type="submit" class="btn btn-success">Submit</button>
+								          </div>
+								        </div>
+								      </form>
+
+							</div>
+						</div><br>
+
+						<div class="row">
 							<div class="col-md-12">
 								@guest
 								@else
@@ -710,6 +761,17 @@ $(".five-star-rating").click(function(){
 	setTimeout(function(){
 	 $( ".poststars" ).submit();
 	  }, 2000)
+});
+
+$('#refresh').click(function(){
+src = "{{ route('refreshcaptcha') }}";
+  $.ajax({
+     type:'GET',
+     url:src,
+     success:function(data){
+        $(".captcha span").html(data.captcha);
+     }
+  });
 });
 
 </script>

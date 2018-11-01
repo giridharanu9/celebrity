@@ -11,6 +11,8 @@
         "laravel/socialite": "^3.1",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "5.6.*",
+        "mews/captcha": "^2.2",
+        "maatwebsite/excel": "~2.1.0",
         "socialiteproviders/instagram": "^3.0",
         "yajra/laravel-datatables-oracle": "~1.0"
     },

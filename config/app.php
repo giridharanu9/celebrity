@@ -146,8 +146,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        
-
         /*
          * Package Service Providers...
          */
@@ -162,11 +160,12 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
         /*
         * form
         */
         Collective\Html\HtmlServiceProvider::class,
-
+        'Maatwebsite\Excel\ExcelServiceProvider'
     ],
 
     /*
@@ -220,6 +219,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Input' => Illuminate\Support\Facades\Input::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        'Excel' => 'Maatwebsite\Excel\Facades\Excel'
     ],
 
 ];

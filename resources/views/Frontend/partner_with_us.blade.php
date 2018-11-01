@@ -92,10 +92,6 @@
    </div>
  </div>
 
-
-
-
-
 	<br><br><br>
 
 	<div class="footer col-xs-12" align="center" style="background-color: #3575d3;" >

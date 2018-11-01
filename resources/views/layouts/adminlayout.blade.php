@@ -93,6 +93,7 @@
                   <ul class="nav child_menu" style="display: none">
                     <li><a href="{{ route('celebrity.create') }}"><i class="fa fa-plus" style="width:15px;font-size: 15px"></i> Add Celebrity</a></li>
                     <li><a href="{{ route('celebrity.index') }}"><i class="fa fa-list" style="width:15px;font-size: 15px"></i> Manage Celebrities</a></li>
+                    <li><a href="{{ url('celebrity/import_csv') }}"><i class="fa fa-upload" style="width:15px;font-size: 15px"></i> Import Csv</a></li>
                   </ul>
                 </li>
 
@@ -225,7 +226,7 @@
           </div>
           <!-- /sidebar menu -->
 
-          
+
         </div>
       </div>
 
@@ -252,7 +253,7 @@
                       <span>Change Password</span>
                     </a>
                   </li>
-                  
+
                   <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                   </li>
                 </ul>
@@ -338,11 +339,11 @@
       </div>
       <!-- /top navigation -->
 
-      
+
       <!-- page content -->
       <div class="right_col" role="main"><br />
 
-      @yield('pagecontent')  
+      @yield('pagecontent')
 
       </div>
       <!-- /page content -->
@@ -390,13 +391,13 @@
 
   <script src="{{ asset('public/admin/js/datatables/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('public/admin/js/datatables/dataTables.bootstrap.js') }}"></script>
-  
+
 
 
   <!-- pace -->
   <script src="{{ asset('public/admin/js/pace/pace.min.js') }}"></script>
   <!-- flot -->
-  
+
 
   @yield('footer_scripts')
 </body>

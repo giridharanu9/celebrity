@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Celebrity;
 use App\Category;
 use App\Skill;
@@ -12,6 +14,8 @@ use DB;
 use Illuminate\Support\Str;
 use App\RatingQuestion;
 use App\Ratings;
+use Log;
+use Image;
 
 class CelebrityController extends Controller
 {
@@ -44,18 +48,18 @@ class CelebrityController extends Controller
         $resultData = DB::select($sql);
         $totalData = count($resultData);
         // if there is no search parameter then total number rows = total number filtered rows.
-        $totalFiltered = $totalData;  
+        $totalFiltered = $totalData;
 
 
         $sql = "select celebrities.*, categories.categorytitle from celebrities left join categories on categories.id= celebrities.categoryid";
-        
-        if( !empty($requestData['search']['value']) ) {   
-            $sql.=" WHERE ( celebrities.id LIKE '%".$requestData['search']['value']."%' ";    
+
+        if( !empty($requestData['search']['value']) ) {
+            $sql.=" WHERE ( celebrities.id LIKE '%".$requestData['search']['value']."%' ";
             $sql.=" OR name LIKE '%".$requestData['search']['value']."%'  ";
             $sql.=" OR categories.categorytitle LIKE '%".$requestData['search']['value']."%' ) ";
         }
         $resultData = DB::select($sql);
-        //if there is a search parameter then modify total number filtered rows as per search result. 
+        //if there is a search parameter then modify total number filtered rows as per search result.
         $totalFiltered = count($resultData);
 
         $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
@@ -66,27 +70,27 @@ class CelebrityController extends Controller
             foreach($resultData as $row){
                 $edit_url = route('celebrity.edit', $row->id);
                 $nestedData=array();
-                
+
                 $nestedData[] = $row->id;
                 $nestedData[] = ucfirst($row->name);
                 $nestedData[] = $categoriesArr[$row->categoryid];
 
                 $img = ($row->image) ?  url('/').'/public/uploads/celebrity/'.$row->id.'/'.$row->image : url('/').'/public/admin/images/user2.png';
-                
+
                 $nestedData[] = '<div><img style="width:50px;" src="'.$img.'"></div>';
                 if($row->status == 1){
                     $nestedData[] = '<div class="statusBtn'.$row->id.'"><a href="javascript:void(0);" onclick="changeStatus(\''.$row->id.'\', \'0\')" class="btn btn-success btn-sm" title="Click here to make it inactive">Active</a></div>';
                 }else{
                     $nestedData[] = '<div class="statusBtn'.$row->id.'"><a href="javascript:void(0);" onclick="changeStatus(\''.$row->id.'\', \'1\')" class="btn btn-danger btn-sm" title="Click here to make it active" >Inactive</a></div>';
                 }
-                
+
                 $nestedData[] = '<a class="btn btn-info btn-sm" href="'.$edit_url.'"><i class="fa fa-edit"></i></a>
                 ';
-                
+
                 $data[] = $nestedData;
             }
         }
-        
+
         $json_data = array(
                     "draw"            => intval( $requestData['draw'] ),
                     "recordsTotal"    => intval( $totalData ),
@@ -139,7 +143,7 @@ class CelebrityController extends Controller
                 'fb_frame' => 'required',
                 'userpic' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
-        
+
         $getuniqueurl = $this->getEventSlug($request->get('celebrityname'));
 
         $celebrity = new Celebrity;
@@ -182,7 +186,7 @@ class CelebrityController extends Controller
             $request->session()->flash('message.level', 'danger');
             $request->session()->flash('message.content', 'Error Occurred!');
         }
-        
+
         return redirect()->route('celebrity.index');
     }
 
@@ -208,7 +212,7 @@ class CelebrityController extends Controller
         $categories = Category::where('status', 1)->get();
         $skills = Skill::where('status', 1)->get();
         $celebrityData = Celebrity::where('id', $id)-> first();
-        
+
         return view('admin.celebrity.edit', ['categoryData' => $categories, 'skillsData' => $skills, 'celebrityData' => $celebrityData]);
     }
 
@@ -227,8 +231,8 @@ class CelebrityController extends Controller
                 'category' => 'required',
                 'skills' => 'required',
             ]);
-        
-        
+
+
         $updateArr = [
             'name' => $request->get('celebrityname'),
             'description' => $request->get('celebritydetails'),
@@ -258,11 +262,11 @@ class CelebrityController extends Controller
         if($celebrityUpdate){
             $request->session()->flash('message.level', 'success');
             $request->session()->flash('message.content', 'Celebrity details have been updated successfully!');
-        }else{ 
+        }else{
             $request->session()->flash('message.level', 'danger');
             $request->session()->flash('message.content', 'Error Occurred!');
         }
-        
+
         return redirect()->route('celebrity.index');
     }
 
@@ -308,6 +312,146 @@ class CelebrityController extends Controller
 
     }
 
+    /**
+     * Import csv file.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
+     public function getImportCsv()
+     {
+        return view('admin.celebrity.import_csv');
+     }
+
+
+
+    public function importCsv(Request $request)
+    {
+      ini_set('max_execution_time', 120);
+
+      $input = request()->validate([
+              'file' => 'required',
+      ]);
+
+      $file =$request->file('file');
+
+      if($file){
+        $filename = $file->getClientOriginalName();
+        $path = $file->getPathName();
+
+      $results = Excel::load($path,function($reader){
+      })->get();
+
+      foreach($results as $res){
+        if($res->image){
+         $exists = Storage::disk('image')->exists($res->image);
+
+         $url = @file_get_contents($res->image);
+
+        if($url || $exists){
+           // if(strpos($url[0],'200')===false){
+              Log::info($res->image);
+              $ext = pathinfo($res->image, PATHINFO_EXTENSION);
+              $document = $res->image;
+              $imgName = time().'_'.basename($res->image);
+              $path = ('image/' . $imgName);
+
+              $destination_path = \Storage::disk('image')->put($imgName, $url);
+
+
+              if($res->name){
+                $celebrities = Celebrity::where('name','=',$res->name)->first();
+                if($celebrities == ''){
+                  if($res->name){
+                    $getCategory = Category::where('categorytitle', $res->category)->first();
+                  }
+                  if($res->skill){
+                    $getSkill = Skill::where('skilltitle', $res->skill)->first();
+                  }
+
+                  $getuniqueurl = $this->getEventSlug($res->name);
+
+                  $dateOfBirth = $res->date_of_birth ;
+                  $today = date("Y-m-d");
+                  $diff = date_diff(date_create($dateOfBirth), date_create($today));
+                  $res->age = $diff->format('%y');
+
+                  $query = DB::table('celebrities')->insertGetId(['name'=>$res->name,'description'=>$res->description,'categoryid'=>$getCategory->id,
+                                                                  'skills'=>$getSkill->id, 'gender'=>$res->gender, 'date_of_birth'=>$res->date_of_birth ,
+                                                                  'age'=>$res->age,'image'=>$res->image, 'twitter_id'=>$res->twitter_id, 'insta_frame'=>$res->insta_frame,
+                                                                  'fb_frame'=>$res->fb_frame, 'uniqueurl'=>$getuniqueurl, 'status'=>1]);
+
+                  $lastInsertedId = $query;
+
+                  $imgPath = storage_path('image/' .$imgName);
+
+                  Log::info($imgPath);
+
+                  if($imgPath){
+                      // to upload file
+                      $img = $imgPath;
+                      $destinationPath = public_path(). '/uploads/celebrity/'.$lastInsertedId.'/';
+                      $imgFilename = basename($imgPath);
+                      $getExtension = 'jpeg';
+                      $newfilename = time()."_virat-kohali".'.'.$getExtension;
+                      $t = time().$imgPath.'.'.$getExtension;
+
+                       mkdir($destinationPath, 0777, true);
+
+                      $this->copy_files($imgPath, $destinationPath);
+
+                      $celebrityUpdate = Celebrity::where('id', $lastInsertedId)->update(['image' => $imgFilename]);
+                  }
+
+                  if($lastInsertedId){
+                      $request->session()->flash('message.level', 'success');
+                      $request->session()->flash('message.content', 'Celebrity details have been added successfully!');
+                  }else{
+                      $request->session()->flash('message.level', 'danger');
+                      $request->session()->flash('message.content', 'Error Occurred!');
+                  }
+
+              }else{
+                $request->session()->flash('message.level', 'danger');
+                $request->session()->flash('message.content', 'Celebrity details is already exists!');
+              }
+
+             }else {
+
+              $request->session()->flash('message.level', 'danger');
+              $request->session()->flash('message.content', 'Name  is missing!!');
+              }
+
+
+
+           }else{
+
+             $request->session()->flash('message.level', 'danger');
+             $request->session()->flash('message.content', 'Image link is incorrect');
+                break;
+           }
+
+         }
+
+
+
+
+
+
+
+      }
+    }
+      return redirect()->back();
+    }
+
+  function copy_files($file_path, $dest_path){
+    if (strpos($file_path, '/') !== false) {
+        $pathinfo = pathinfo($file_path);
+        $dest_path = str_replace($pathinfo['dirname'], $dest_path, $file_path);
+    }else{
+        $dest_path = $dest_path.'/'.$file_path;
+    }
+    return copy($file_path, $dest_path);
+}
 
 }
