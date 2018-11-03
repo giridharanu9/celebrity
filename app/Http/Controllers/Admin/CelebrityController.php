@@ -436,7 +436,7 @@ class CelebrityController extends Controller
                   $diff = date_diff(date_create($dateOfBirth), date_create($today));
                   $res->age = $diff->format('%y');
 
-                  $query = DB::table('celebrities')->insertGetId(['name'=>$res->name,'description'=>$res->description,'categoryid'=>$getCategory->id,
+                  $query = DB::table('celebrities')->insertGetId(['name'=>$res->name,'description'=>$res->description,'categoryid'=>$getCategory->id,'parent_category_id'=>$getCategory->category_parent,
                                                               'skills'=>$getSkill->id, 'gender'=>$res->gender, 'date_of_birth'=>$res->date_of_birth ,
                                                               'age'=>$res->age,'image'=>$res->image, 'twitter_id'=>$res->twitter_id, 'insta_frame'=>$res->insta_frame,
                                                               'fb_frame'=>$res->fb_frame, 'uniqueurl'=>$getuniqueurl, 'status'=>1]);
