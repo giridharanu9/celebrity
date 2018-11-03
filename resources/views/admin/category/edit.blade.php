@@ -40,15 +40,28 @@
           	<input name="_method" type="hidden" value="PUT">
           	<input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Category Name <span class="required">*</span>
-				</label>
-				<div class="col-md-6 col-sm-6 col-xs-12">
-					<input type="text" id="categoryname" required="required" value="{{ $categoryData->categorytitle }}" class="form-control col-md-7 col-xs-12" name="categoryname">
-					<div class="error">{{ $errors->first('categoryname') }}</div>
-	            </div>
-
+      				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Category Name <span class="required">*</span>
+      				</label>
+      				<div class="col-md-6 col-sm-6 col-xs-12">
+      					<input type="text" id="categoryname" required="required" value="{{ $categoryData->categorytitle }}" class="form-control col-md-7 col-xs-12" name="categoryname">
+      					<div class="error">{{ $errors->first('categoryname') }}</div>
+      	      </div>
             </div>
-            
+            <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryname">Select Parent Category
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <select class="form-control col-md-7 col-xs-12" name="parent_category" id="parent_category">
+                          <option value="0">Please select category</option>
+                          @if($categories)
+                          @foreach($categories as $row)
+                              <option @if($categoryData->category_parent == $row->id) selected  @endif value="{{$row->id}}">{{ ucfirst($row->categorytitle) }}</option>
+                         
+                          @endforeach
+                          @endif
+                      </select>
+                    </div>
+              </div>
             <div class="ln_solid"></div>
             <div class="form-group">
               <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

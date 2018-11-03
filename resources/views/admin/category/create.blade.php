@@ -39,15 +39,28 @@
           <form id="demo-form2" method="POST" data-parsley-validate class="form-horizontal form-label-left" action="{{ route('category.store') }}">
           	<input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryname">Category Name <span class="required">*</span>
-				</label>
-				<div class="col-md-6 col-sm-6 col-xs-12">
-					<input type="text" id="categoryname" required="required" value="{{ old('categoryname') }}" class="form-control col-md-7 col-xs-12" name="categoryname">
-					<div class="error">{{ $errors->first('categoryname') }}</div>
-	            </div>
-
+      				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryname">Category Name <span class="required">*</span>
+      				</label>
+      				<div class="col-md-6 col-sm-6 col-xs-12">
+      					<input type="text" id="categoryname" required="required" value="{{ old('categoryname') }}" class="form-control col-md-7 col-xs-12" name="categoryname">
+      					<div class="error">{{ $errors->first('categoryname') }}</div>
+      	      </div>
             </div>
-            
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="categoryname">Select Parent Category
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <select class="form-control col-md-7 col-xs-12" name="parent_category" id="parent_category">
+                    <option value="0">Please select category</option>
+                    @if($categories)
+                    @foreach($categories as $row){
+                        <option value="{{$row->id}}">{{ ucfirst($row->categorytitle) }}</option>
+                    }
+                    @endforeach
+                    @endif
+                </select>
+              </div>
+            </div>
             <div class="ln_solid"></div>
             <div class="form-group">
               <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

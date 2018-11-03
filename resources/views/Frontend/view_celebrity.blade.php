@@ -382,28 +382,28 @@
 		            			<form method="POST" id="Register">
 		            				{{ csrf_field() }}
 		            				<div class="form-group has-feedback">
-		            					<input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Full name">
+		            					<input type="text" id="rname"_ name="name" value="{{ old('name') }}" class="form-control" placeholder="Full name">
 		            					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 		            					<span class="text-danger">
 		            						<strong id="name-error"></strong>
 		            					</span>
 		            				</div>
 		            				<div class="form-group has-feedback">
-		            					<input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Email">
+		            					<input type="email" id="remail" name="email" value="{{ old('email') }}" class="form-control" placeholder="Email">
 		            					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 		            					<span class="text-danger">
 		            						<strong id="email-error"></strong>
 		            					</span>
 		            				</div>
 		            				<div class="form-group has-feedback">
-		            					<input type="password" name="password" class="form-control" placeholder="Password">
+		            					<input type="password" id="rpassword" name="password" class="form-control" placeholder="Password">
 		            					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 		            					<span class="text-danger">
 		            						<strong id="password-error"></strong>
 		            					</span>
 		            				</div>
 		            				<div class="form-group has-feedback">
-		            					<input type="password" name="password_confirmation" class="form-control" placeholder="Retype password">
+		            					<input type="password" id="rcpassword" name="password_confirmation" class="form-control" placeholder="Retype password">
 		            					<span class="glyphicon glyphicon-log-in form-control-feedback"></span>
 		            				</div>
 		            				<div class="row">
@@ -516,7 +516,7 @@
 
 		@endforeach
 		
-		</form>
+		
 		<div>
 			<tr>
 				<td>
@@ -524,7 +524,7 @@
 				</td>
 			</tr>
 		</div>	
-		
+		</form>
 	</table>
 </div>
 @endguest

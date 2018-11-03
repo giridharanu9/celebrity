@@ -60,6 +60,8 @@ Route::group(
 
 		Route::post('/celebrity/listDatatable', 'CelebrityController@listDatatable');
 
+		Route::get('celebrity/getSubCategories/{id}', 'CelebrityController@getSubCategories'); //AJAX request to get sub categories
+
 });
 
 Route::get('/celebrity/polls', 'Admin\CelebrityController@polls')->name('celebrity.polls');
@@ -82,6 +84,9 @@ Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteContro
 Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Admin\FrontEndController@autoSearchCelebrity'));
 
 Route::post('user-login', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
+
+Route::post('user-register', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
+
 Route::get('celebrity/refreshcaptcha', 'Admin\FrontEndController@refreshCaptcha')->name('refreshcaptcha');
 Route::post('celebrity/sendFeedback', 'Admin\FrontEndController@sendFeedback');
 // close Autocomplete

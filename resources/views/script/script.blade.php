@@ -49,8 +49,9 @@ $('body').on('click', '#submitForm', function(){
             type:'POST',
             data:formData,
             success:function(data) {
-                console.log(data);
+                console.log('result='+data);
                 if(data.errors) {
+                    console.log('in if='+data);
                     if(data.errors.name){
                         $( '#name-error' ).html( data.errors.name[0] );
                     }
@@ -62,13 +63,26 @@ $('body').on('click', '#submitForm', function(){
                     }
                     
                 }
-                if(data.success) {
+                else
+                {
+                    console.log('inelse='+data);
+                    $( '#rname' ).val( "" );
+                    $( '#remail' ).val( "" );
+                    $( '#rpassword' ).val( "" );
+                    $( '#rcpassword' ).val( "" );
+                    $('#success-msg').removeClass('hide');
+                    setInterval(function(){ 
+                        $('#SignUp').modal('hide');
+                        $('#success-msg').addClass('hide');
+                    }, 3000);  
+                }
+                /*if(data.success) {
                     $('#success-msg').removeClass('hide');
                     setInterval(function(){ 
                         $('#SignUp').modal('hide');
                         $('#success-msg').addClass('hide');
                     }, 3000);
-                }
+                }*/
             },
         });
     });

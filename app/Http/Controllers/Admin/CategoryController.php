@@ -95,7 +95,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.category.create');
+        $categories = Category::where('status', 1)
+        ->where('category_parent', 0)
+        ->get();
+        //return view('admin.category.create');
+        return view('admin.category.create',compact('categories'));
     }
 
     /**
@@ -111,6 +115,7 @@ class CategoryController extends Controller
 
         $category = new Category;
         $category->categorytitle = $request->input('categoryname');
+        $category->category_parent = $request->input('parent_category');
         $categorySaved = $category->save();
 
         if($categorySaved){
@@ -144,7 +149,10 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $categoryData = Category::where('id', $id)-> first();
-        return view('admin.category.edit', ['categoryData' => $categoryData]);
+        $categories = Category::where('status', 1)
+                        ->where('category_parent', 0)
+                        ->get();
+        return view('admin.category.edit', ['categoryData' => $categoryData, 'categories' => $categories]);
     }
 
     /**
@@ -158,8 +166,8 @@ class CategoryController extends Controller
     {
         $input = request()->validate(['categoryname' => 'required|max:225|min:2']);
         $categoryname = $request->get('categoryname');
-        
-        $categoryUpdate = Category::where('id', $id)->update(['categorytitle' => $categoryname]);
+        $parentcategory = $request->get('parent_category');
+        $categoryUpdate = Category::where('id', $id)->update(['categorytitle' => $categoryname,'category_parent' => $parentcategory]);
 
 
         if($categoryUpdate){

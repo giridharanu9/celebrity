@@ -82,13 +82,23 @@
                     <select class="form-control col-md-7 col-xs-12" name="category" id="category">
                         <option value="">Please select category</option>
                         @if($categoryData)
-                        @foreach($categoryData as $row){
+                        @foreach($categoryData as $row)
                             <option value="{{$row->id}}">{{ ucfirst($row->categorytitle) }}</option>
-                        }
                         @endforeach
                         @endif
                     </select>
                     <div class="error">{{ $errors->first('category') }}</div>
+                </div>
+            </div>
+            <div class="form-group select-sub-category" id="subcategory" style="display:none;">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="celebritydetails">Select Sub Category <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    
+                    <select class="form-control col-md-7 col-xs-12" name="sub_category" id="sub_category">
+                        <option value="">Please select Sub category</option>
+                    </select>
+                    <div class="error">{{ $errors->first('subcategory') }}</div>
                 </div>
             </div>
             <div class="form-group">
@@ -193,5 +203,21 @@ function showMyImage(fileInput) {
         $('#thumbnil').show();
     }    
 }
+
+//get subcateogries according to sector selection
+  $("#category").change(function(){
+    $('#subcategory').hide();
+    $('#subcategory').find('option:not(:first)').remove();
+    $.get("getSubCategories/"+ $(this).val(), function(data){
+        $element = $("#sub_category");
+       if(data[0])
+       {
+        $('#subcategory').show();
+       }
+        $(data).each(function(){
+          $element.append("<option value='"+ this.id +"'>"+ this.categorytitle +"</option>");
+        });
+    });
+  })
 </script>
 @stop

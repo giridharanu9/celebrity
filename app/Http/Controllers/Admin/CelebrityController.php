@@ -16,7 +16,7 @@ use App\RatingQuestion;
 use App\Ratings;
 use Log;
 use Image;
-
+use Response;
 class CelebrityController extends Controller
 {
     /**
@@ -117,9 +117,22 @@ class CelebrityController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)
+        ->where('category_parent', 0)
+        ->get();
         $skills = Skill::where('status', 1)->get();
         return view('admin.celebrity.create')->with(['categoryData' => $categories, 'skillsData' => $skills]);
+    }
+
+    public function getSubCategories(Request $request, $id)
+    {
+        if($request->ajax()){
+          $categories = Category::where('status', 1)
+                        ->where('category_parent', $id)
+                        ->get();
+          return Response::json( $categories );
+
+        }
     }
 
     /**
@@ -151,7 +164,18 @@ class CelebrityController extends Controller
         $celebrity->gender = $request->get('gender');
         $celebrity->date_of_birth = $request->get('date_of_birth');
         $celebrity->description = $request->get('celebritydetails');
-        $celebrity->categoryid = $request->get('category');
+        if(!empty($request->get('sub_category')))
+        {
+          $celebrity->categoryid = $request->get('sub_category');
+          $celebrity->parent_category_id = $request->get('category');
+        }
+        else
+        {
+          $celebrity->categoryid = $request->get('category');
+          $celebrity->parent_category_id = 0;
+        }
+       // die;
+        //$celebrity->categoryid = $request->get('category');
         $celebrity->skills = implode(',', $request->get('skills'));
         $celebrity->twitter_id = $request->get('twitter_id');
         $celebrity->insta_frame = $request->get('insta_frame');
@@ -209,11 +233,21 @@ class CelebrityController extends Controller
      */
     public function edit($id)
     {
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)
+        ->where('category_parent', 0)
+        ->get();
         $skills = Skill::where('status', 1)->get();
         $celebrityData = Celebrity::where('id', $id)-> first();
-
-        return view('admin.celebrity.edit', ['categoryData' => $categories, 'skillsData' => $skills, 'celebrityData' => $celebrityData]);
+        $subcategories="";
+        if(!empty($celebrityData->parent_category_id))
+        {
+          $subcategories = Category::where('status', 1)
+          ->where('category_parent', $celebrityData->parent_category_id)
+          ->get();
+         // echo "<pre>";
+         // print_r($subcategories);
+        }
+        return view('admin.celebrity.edit', ['categoryData' => $categories, 'subCategoryData' => $subcategories, 'skillsData' => $skills, 'celebrityData' => $celebrityData]);
     }
 
     /**
@@ -232,11 +266,21 @@ class CelebrityController extends Controller
                 'skills' => 'required',
             ]);
 
-
+        if(!empty($request->get('sub_category')))
+        {
+          $categoryid = $request->get('sub_category');
+          $parent_category_id = $request->get('category');
+        }
+        else
+        {
+          $categoryid = $request->get('category');
+          $parent_category_id = 0;
+        }
         $updateArr = [
             'name' => $request->get('celebrityname'),
             'description' => $request->get('celebritydetails'),
-            'categoryid' => $request->get('category'),
+            'categoryid' => $categoryid,
+            'parent_category_id' => $parent_category_id,
             'skills' => implode(',', $request->get('skills'))
         ];
 
@@ -325,49 +369,65 @@ class CelebrityController extends Controller
 
 
 
-    public function importCsv(Request $request)
-    {
-      ini_set('max_execution_time', 120);
+     public function importCsv(Request $request)
+     {
+       ini_set('max_execution_time', 120);
 
-      $input = request()->validate([
-              'file' => 'required',
-      ]);
+       $input = request()->validate([
+               'file' => 'required',
+       ]);
 
-      $file =$request->file('file');
+       $file =$request->file('file');
 
-      if($file){
-        $filename = $file->getClientOriginalName();
-        $path = $file->getPathName();
+       if($file){
+         $filename = $file->getClientOriginalName();
+         $path = $file->getPathName();
 
-      $results = Excel::load($path,function($reader){
-      })->get();
+       $results = Excel::load($path,function($reader){
+       })->get();
 
-      foreach($results as $res){
-        if($res->image){
-         $exists = Storage::disk('image')->exists($res->image);
+       $arr = [];
+       foreach($results as $res){
 
-         $url = @file_get_contents($res->image);
+       if($res->category){
+         $getCategory = Category::where('categorytitle', $res->category)->first();
+       }
 
-        if($url || $exists){
-           // if(strpos($url[0],'200')===false){
-              Log::info($res->image);
-              $ext = pathinfo($res->image, PATHINFO_EXTENSION);
-              $document = $res->image;
-              $imgName = time().'_'.basename($res->image);
-              $path = ('image/' . $imgName);
+      //  $celebrities = Celebrity::where('name','=',$res->name)->first();
+        $celebrities = DB::table('celebrities')
+                       ->select('*')
+                        ->where('name', '=', $res->name)
+                        ->where('categoryid', '=', $getCategory->id)
+                        ->where('gender', '=', $res->gender)
+                        ->where('date_of_birth', '=', $res->date_of_birth)
+                        ->get();
 
-              $destination_path = \Storage::disk('image')->put($imgName, $url);
+        if(count($celebrities)== '0'){
 
+          if($res->name && $res->category && $res->gender && $res->date_of_birth){
+            $exists = Storage::disk('image')->exists($res->image);
 
-              if($res->name){
-                $celebrities = Celebrity::where('name','=',$res->name)->first();
-                if($celebrities == ''){
-                  if($res->name){
-                    $getCategory = Category::where('categorytitle', $res->category)->first();
-                  }
-                  if($res->skill){
-                    $getSkill = Skill::where('skilltitle', $res->skill)->first();
-                  }
+              $url='';
+              $imageName='';
+              if($exists){
+                 // $url = @file_get_contents($exists);
+                 $url = 'storage';
+                 $imageName = $res->image;
+
+              }else{
+                 $url = @file_get_contents($res->image);
+                 $imageName = time().'_'.basename($res->image);
+                 $path = ('image/' . $imageName);
+                 $destination_path = \Storage::disk('image')->put($imageName, $url);
+              }
+
+              if($url || $url = 'storage'){
+                 if($res->category){
+                   $getCategory = Category::where('categorytitle', $res->category)->first();
+                 }
+                 if($res->skill){
+                   $getSkill = Skill::where('skilltitle', $res->skill)->first();
+                 }
 
                   $getuniqueurl = $this->getEventSlug($res->name);
 
@@ -377,71 +437,40 @@ class CelebrityController extends Controller
                   $res->age = $diff->format('%y');
 
                   $query = DB::table('celebrities')->insertGetId(['name'=>$res->name,'description'=>$res->description,'categoryid'=>$getCategory->id,
-                                                                  'skills'=>$getSkill->id, 'gender'=>$res->gender, 'date_of_birth'=>$res->date_of_birth ,
-                                                                  'age'=>$res->age,'image'=>$res->image, 'twitter_id'=>$res->twitter_id, 'insta_frame'=>$res->insta_frame,
-                                                                  'fb_frame'=>$res->fb_frame, 'uniqueurl'=>$getuniqueurl, 'status'=>1]);
+                                                              'skills'=>$getSkill->id, 'gender'=>$res->gender, 'date_of_birth'=>$res->date_of_birth ,
+                                                              'age'=>$res->age,'image'=>$res->image, 'twitter_id'=>$res->twitter_id, 'insta_frame'=>$res->insta_frame,
+                                                              'fb_frame'=>$res->fb_frame, 'uniqueurl'=>$getuniqueurl, 'status'=>1]);
 
-                  $lastInsertedId = $query;
-
-                  $imgPath = storage_path('image/' .$imgName);
-
-                  Log::info($imgPath);
-
-                  if($imgPath){
-                      // to upload file
-                      $img = $imgPath;
-                      $destinationPath = public_path(). '/uploads/celebrity/'.$lastInsertedId.'/';
-                      $imgFilename = basename($imgPath);
-                      $getExtension = 'jpeg';
-                      $newfilename = time()."_virat-kohali".'.'.$getExtension;
-                      $t = time().$imgPath.'.'.$getExtension;
-
-                       mkdir($destinationPath, 0777, true);
-
-                      $this->copy_files($imgPath, $destinationPath);
-
-                      $celebrityUpdate = Celebrity::where('id', $lastInsertedId)->update(['image' => $imgFilename]);
-                  }
-
-                  if($lastInsertedId){
-                      $request->session()->flash('message.level', 'success');
-                      $request->session()->flash('message.content', 'Celebrity details have been added successfully!');
-                  }else{
-                      $request->session()->flash('message.level', 'danger');
-                      $request->session()->flash('message.content', 'Error Occurred!');
-                  }
-
-              }else{
-                $request->session()->flash('message.level', 'danger');
-                $request->session()->flash('message.content', 'Celebrity details is already exists!');
+                 $lastInsertedId = $query;
+                 $imgPath = storage_path('image/' .$imageName);
+                 if($imgPath){
+                    $img = $imgPath;
+                    $destinationPath = public_path(). '/uploads/celebrity/'.$lastInsertedId.'/';
+                    mkdir($destinationPath, 0777, true);
+                    $this->copy_files($imgPath, $destinationPath);
+                    $celebrityUpdate = Celebrity::where('id', $lastInsertedId)->update(['image' => $imageName]);
+                 }
               }
-
-             }else {
-
-              $request->session()->flash('message.level', 'danger');
-              $request->session()->flash('message.content', 'Name  is missing!!');
-              }
-
-
 
            }else{
-
-             $request->session()->flash('message.level', 'danger');
-             $request->session()->flash('message.content', 'Image link is incorrect');
-                break;
+              $msg = 'name, category, gender and date of birth are not found!';
            }
-
+           array_push($arr, true);
+         }else{
+           array_push($arr, false);
          }
+       }
 
+       if(count(array_keys($arr, false)) == count($arr)){
+         $request->session()->flash('message.level', 'danger');
+         $request->session()->flash('message.content', 'Celebrity details is already exists!');
+       }else{
+         $request->session()->flash('message.level', 'success');
+         $request->session()->flash('message.content', 'Celebrity details have been added successfully!');
+       }
 
-
-
-
-
-
-      }
-    }
-      return redirect()->back();
+     }
+     return redirect()->back();
     }
 
   function copy_files($file_path, $dest_path){
