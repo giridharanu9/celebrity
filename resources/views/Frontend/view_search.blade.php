@@ -86,7 +86,7 @@
 		 						</span>
 		 					</div>
 		 				</div>
-		 				<div class="row advance-search" style="margin-top:30px;display:none;">
+		 				<div class="row advance-search" style="margin-top:30px;">
 
 							<div class="col-md-6">
 								<div class="form-group">

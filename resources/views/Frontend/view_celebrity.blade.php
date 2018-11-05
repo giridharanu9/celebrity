@@ -357,7 +357,7 @@
 			                        </div>
 		                       	<hr>
 		                        <div class="form-group">
-		                        	<div class="col-md-8 col-md-offset-4">
+		                        	<div class="col-md-12 col-md-offset-411">
 		                        		<a href="{{ url('/auth/twitter') }}" class="btn btn-twitter"><i class="fa fa-twitter"></i> Twitter</a>
 		                        		<a href="{{ url('/auth/facebook') }}" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
 		                        		<a href="{{ url('/auth/instagram') }}" class="btn btn-instagram"><i class="fa fa-instagram"></i> Instagram</a>
@@ -420,7 +420,7 @@
 		            	</div>
 		            </div>
 		        </div>
-		    <div class="modal-footer">
+		    <div class="modal-footer" style="border-top:none;">
 		    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		    </div>
 		</div>
@@ -571,20 +571,25 @@
 <div class="row">
 	<br><br>
 	<h4>{{$celebrity->name}} 's Social Media</h4><br>
+	@if(!empty($celebrity->fb_frame))
 	<div class="col-md-4">
 		<h4>FACEBOOK</h4>
 		<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F{{$celebrity->fb_frame}}%2F&tabs=timeline&&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="900px"  height="700" style="border:none;overflow:hidden;" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
 	</div>
+	@endif
+	@if(!empty($celebrity->insta_frame))
 	<div class="col-md-4">
 		<h4>INSTAGRAM</h4>
 		<iframe src="{{$celebrity->insta_frame}}" style="width: 100%;height: 500px;"></iframe>
 	</div><br>
+	@endif
+	@if(!empty($celebrity->twitter_id))
 	<div class="col-md-3 col-md-push-1" style="height: 500px;overflow: scroll;">
 		<h4>TWITTER</h4>
 		<p><a class="twitter-timeline" href="https://twitter.com/{{$celebrity->twitter_id}}?ref_src=twsrc%5Etfw">Tweets by {{$celebrity->twitter_id}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> </p>
 	</div>
-
-</div>
+	@endif
+    </div>
 </div>
 
 

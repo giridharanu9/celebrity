@@ -85,7 +85,7 @@ Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Ad
 
 Route::post('user-login', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
 
-Route::post('user-register', 'Auth\LoginController@authenticatedCustomLogin')->name('ajax_login');
+Route::post('user-register', 'Auth\RegisterController@authenticatedCustomRegister')->name('ajax_register');
 
 Route::get('celebrity/refreshcaptcha', 'Admin\FrontEndController@refreshCaptcha')->name('refreshcaptcha');
 Route::post('celebrity/sendFeedback', 'Admin\FrontEndController@sendFeedback');

@@ -10,7 +10,7 @@ use App\UserInfo;
 use App\UserActivity;
 use Illuminate\Http\Request;
 use Response;
-
+use Auth;
 class RegisterController extends Controller
 {
     /*
@@ -75,7 +75,7 @@ class RegisterController extends Controller
         ]);
  
     }
-    public function register(Request $request)
+    public function register11(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
@@ -96,6 +96,43 @@ class RegisterController extends Controller
             // Store your user in database 
 
             //return Response::json(['success' => '1']);
+
+        }
+        
+        return Response::json(['errors' => $validator->errors()]);
+    }
+
+    public function authenticatedCustomRegister(Request $request)
+    {
+        //die('ashishsh');
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $input = $request->all();
+
+        if ($validator->passes()) {
+            return User::create([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'password' => bcrypt($request->get('password')),
+                'type' => 2,   
+                'referel_code' => uniqid(),    
+            ]);
+            // Store your user in database 
+
+            /*$profile = Auth::user();
+            $profile->name = $request->get('name');
+            $profile->email =  $request->get('email');
+            $profile->password = bcrypt($request->get('password'));
+            $profile->type = '2';
+            $profile->referel_code = uniqid();
+            $profile->save();*/
+
+            return Response::json(['success' => '1']);
 
         }
         

@@ -38,7 +38,7 @@ $(document).ready(function() {
 
 $('body').on('click', '#submitForm', function(){
         var registerForm = $("#Register");
-        registersrc = "{{ route('register') }}";
+        registersrc = "{{ route('ajax_register') }}";
         var formData = registerForm.serialize();
         $( '#name-error' ).html( "" );
         $( '#email-error' ).html( "" );
