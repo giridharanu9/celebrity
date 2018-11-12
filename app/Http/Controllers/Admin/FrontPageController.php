@@ -17,7 +17,7 @@ use App\Subscribe;
 use App\Poll;
 use App\Category;
 use Log;
-
+use App\Page;
 
 class FrontPageController extends Controller
 {
@@ -310,22 +310,30 @@ class FrontPageController extends Controller
 
 		public function getAboutUs()
 		{
-			return view('Frontend.about_us');
+			$pageData = page::where('id', 68)-> first();
+            return view('Frontend.about_us', ['pageData' => $pageData]);
+			//return view('Frontend.about_us');
 		}
 
 		public function getContactUs()
 		{
-			return view('Frontend.contact_us');
+			$pageData = page::where('id', 69)-> first();
+            return view('Frontend.contact_us', ['pageData' => $pageData]);
+			//return view('Frontend.contact_us');
 		}
 
 		public function getPartner()
 		{
-			return view('Frontend.partner_with_us');
+			$pageData = page::where('id', 66)-> first();
+            return view('Frontend.partner_with_us', ['pageData' => $pageData]);
+			//return view('Frontend.partner_with_us');
 		}
 
 		public function getAdvertisement()
 		{
-			return view('Frontend.advertisement_with_us');
+			$pageData = page::where('id', 65)-> first();
+            return view('Frontend.advertisement_with_us', ['pageData' => $pageData]);
+			//return view('Frontend.advertisement_with_us');
 		}
 
 		public function exportCsv(Request $request){

@@ -66,7 +66,9 @@ Route::group(
 		Route::post('/celebrity/listDatatable', 'CelebrityController@listDatatable');
 
 		Route::get('celebrity/getSubCategories/{id}', 'CelebrityController@getSubCategories'); //AJAX request to get sub categories
-
+		Route::resource('page', 'PageController');
+		Route::post('/page/listDatatable', 'PageController@listDatatable');
+		Route::get('page/delete/{page}', ['as' => 'page.delete', 'uses' => 'PageController@destroy']);
 });
 
 Route::get('/celebrity/polls', 'Admin\CelebrityController@polls')->name('celebrity.polls');

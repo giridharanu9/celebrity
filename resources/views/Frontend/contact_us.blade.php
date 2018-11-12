@@ -60,10 +60,12 @@
 			</div>
 		</div><br><br><br>
 
+
+
    <div class="row">
      <div class="col-md-12">
        <div class="about-top">
-         <h2>Contact Us</h2>
+         <h2>{{$pageData->name}}</h2>
        </div>
      </div>
    </div>
@@ -119,17 +121,9 @@
 								</div> -->
                 </div>
                 <div class="col-md-6">
-								<div class="icon-info">
-								<p><i class="fa fa-envelope"></i> exampl@gmail.com</p>
-								<p><i class="fa fa-phone"></i> (+1) 8999-909-900</p>
-                <br/>
-								<h5>Social Touch</h5>
-
-								<p><i class="fa fa-facebook"></i>
-								<i class="fa fa-google-plus-official"></i>
-					  		<i class="fa fa-twitter"></i>
-								<i class="fa fa-linkedin"></i></p>
-						  	</div>
+							
+         <p>{!! $pageData->description !!}
+          </p>
                 </div>
           </form>
         </div>

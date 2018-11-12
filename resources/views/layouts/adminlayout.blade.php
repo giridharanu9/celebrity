@@ -19,12 +19,17 @@
 
   <!-- Custom styling plus plugins -->
   <link href="{{ asset('public/admin/css/custom.css') }}" rel="stylesheet">
+  <link href="{{ asset('public/admin/css/custom.min.css') }}" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ asset('public/admin/css/maps/jquery-jvectormap-2.0.3.css') }}" />
   <link href="{{ asset('public/admin/css/icheck/flat/green.css') }}" rel="stylesheet">
   <link href="{{ asset('public/admin/css/floatexamples.css') }}" rel="stylesheet" />
 
     <link href="{{ asset('public/admin/js/datatables/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('public/admin/js/datatables/buttons.bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/admin/css/prettify.min.css') }}" rel="stylesheet">
+<link href="{{ asset('public/admin/css/switchery.min.css') }}" rel="stylesheet">
+<link href="{{ asset('public/admin/css/starrr.css') }}" rel="stylesheet">
+
 
   <script src="{{ asset('public/admin/js/jquery.min.js') }}"></script>
 
@@ -77,6 +82,12 @@
             <div class="menu_section">
               <h3>&nbsp;</h3>
               <ul class="nav side-menu">
+                 <li {{{ (Request::is('admin/page*') ? 'data-customclass=active' : '') }}}><a ><i class="fa fa-users"></i> Manage Pages <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="{{ route('page.create') }}"><i class="fa fa-plus" style="width:15px;font-size: 15px"></i> Add Page</a></li>
+                    <li><a href="{{ route('page.index') }}"><i class="fa fa-list" style="width:15px;font-size: 15px"></i> Manage Pages</a></li>
+                  </ul>
+                </li>
                 <li {{{ (Request::is('admin/category*') ? 'data-customclass=active' : '') }}}><a ><i class="fa fa-tags"></i> Manage Categories <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
                     <li><a href="{{ route('category.create') }}"><i class="fa fa-plus" style="width:15px;font-size: 15px"></i> Add Category</a></li>
@@ -360,6 +371,10 @@
   </div>
 
   <script src="{{ asset('public/admin/js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('public/admin/js/fastclick.js') }}"></script>
+
+  <script src="{{ asset('public/admin/js/nprogress.js') }}"></script>
+
   <script src="{{ asset('public/admin/js/nicescroll/jquery.nicescroll.min.js') }}"></script>
 
   <!-- bootstrap progress js -->
@@ -374,8 +389,8 @@
   <!-- sparkline -->
   <script src="{{ asset('public/admin/js/sparkline/jquery.sparkline.min.js') }}"></script>
 
-  <script src="{{ asset('public/admin/js/custom.js') }}"></script>
-
+  <!-- <script src="{{ asset('public/admin/js/custom.js') }}"></script> -->
+  <script src="{{ asset('public/admin/js/custom.min.js') }}"></script>
   <!-- flot js -->
   <!--[if lte IE 8]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
   <script type="text/javascript" src="{{ asset('public/admin/js/flot/jquery.flot.js') }}"></script>
@@ -393,11 +408,20 @@
   <script src="{{ asset('public/admin/js/datatables/dataTables.bootstrap.js') }}"></script>
 
 
+ <script src="{{ asset('public/admin/js/bootstrap-wysiwyg.min.js') }}"></script>
 
+  <script src="{{ asset('public/admin/js/jquery.hotkeys.js') }}"></script>
+   <script src="{{ asset('public/admin/js/prettify.js') }}"></script>
+  <script src="{{ asset('public/admin/js/jquery.tagsinput.js') }}"></script>
+<script src="{{ asset('public/admin/js/switchery.min.js') }}"></script>
+<script src="{{ asset('public/admin/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('public/admin/js/parsley.min.js') }}"></script>
+<script src="{{ asset('public/admin/js/autosize.min.js') }}"></script>
+<script src="{{ asset('public/admin/js/jquery.autocomplete.min.js') }}"></script>
+<script src="{{ asset('public/admin/js/starrr.js') }}"></script>
   <!-- pace -->
   <script src="{{ asset('public/admin/js/pace/pace.min.js') }}"></script>
   <!-- flot -->
-
 
   @yield('footer_scripts')
 </body>
