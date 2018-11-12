@@ -16,6 +16,11 @@ Route::get('/', function () {
     return view('Frontend.home');
 });
 
+Route::get('/advanceSearch', function () {
+	// phpinfo();
+    return view('Frontend.advance_search');
+});
+
 // Route::get('/admin', function () {
 // 	// phpinfo();
 //     return view('welcome');
@@ -78,7 +83,7 @@ Route::get('user/{id}','Admin\FrontEndController@user');
 Route::post('save_user', 'Admin\FrontEndController@saveUser');
 Route::get('user_profile/{id}', 'Admin\FrontEndController@userProfile');
 Route::get('celebrity/search', 'Admin\FrontEndController@searchCelebrity');
-
+Route::get('celebrity/advanceSearch', 'Admin\FrontEndController@searchCelebrity');
 // For autocomplete
 Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteController@index'));
 Route::get('celebrity/searchajax',array('as'=>'celebrity/searchajax','uses'=>'Admin\FrontEndController@autoSearchCelebrity'));

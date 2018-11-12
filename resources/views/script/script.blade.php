@@ -13,19 +13,19 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     response(data);
-                   console
+                   
                 }
             });
         },
         minLength:1,
   
     });
-    $('#search').on('keyup', function(){
+    /*$('#search').on('keyup', function(){
         if($(this).val()!='')
             $('.advance-search').show(1000);
         else
             $('.advance-search').hide(1000);
-    });
+    });*/
     $('.registerhere').click(function(){
         $('.loginsection').hide(1000);
         $('.registersection').show(1000);

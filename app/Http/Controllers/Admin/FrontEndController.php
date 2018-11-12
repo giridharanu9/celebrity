@@ -116,7 +116,7 @@ class FrontEndController extends Controller
 
 	public function searchCelebrity(Request $request)
     {
-    	//dd($request);
+    	//dd($request->age);
         $searchText = $request;
         $celebrity =Celebrity::where('name','LIKE','%'.$request->name.'%');
 
@@ -125,7 +125,7 @@ class FrontEndController extends Controller
     	if($request->gender) 
        		$celebrity->where('gender',$request->gender);
        	if($request->age) 
-       		$celebrity->where('age','<',$request->age);
+       		$celebrity->where('age','>',$request->age);
 		if($request->activity == 'like')
        		$celebrity->orderBy('like_count','desc');
        	if($request->activity == 'dislike')

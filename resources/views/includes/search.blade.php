@@ -12,6 +12,7 @@
 					</span>
 				</div>
 			</div>
+			<a href="{{url('advanceSearch')}}" style="float: right;font-size:20px;margin-top:20px;">Advance Filter</a>
 			<div class="row advance-search" style="margin-top:30px;display:none;">
 				<div class="col-md-2">
 					<div class="form-group">

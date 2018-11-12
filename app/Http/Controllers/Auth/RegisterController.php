@@ -11,6 +11,8 @@ use App\UserActivity;
 use Illuminate\Http\Request;
 use Response;
 use Auth;
+use App\Activity;
+use App\UsersInfo;
 class RegisterController extends Controller
 {
     /*
@@ -115,13 +117,14 @@ class RegisterController extends Controller
         $input = $request->all();
 
         if ($validator->passes()) {
-            return User::create([
+            $insertedData= User::create([
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'password' => bcrypt($request->get('password')),
                 'type' => 2,   
                 'referel_code' => uniqid(),    
             ]);
+           // print_r($insertedData->id);die;
             // Store your user in database 
 
             /*$profile = Auth::user();
@@ -131,7 +134,41 @@ class RegisterController extends Controller
             $profile->type = '2';
             $profile->referel_code = uniqid();
             $profile->save();*/
+            if(!$activity = UserActivity::where('user_id',$insertedData->id)->where('activity_id',10)->where('created_at','>=',date("Y-m-d"))->first())
+            {    
+                $activity = new UserActivity;
+                $activity->user_id = $insertedData->id;
+                $activity->activity_id = 10;
+                $activity_points = Activity::select('points')->where('id','10')->first();
+                $activity->points = $activity_points->points;
+                $activity->save();
 
+
+                if(!$users_info = UsersInfo::where('user_id',$insertedData->id)->first())
+                 $users_info = new UsersInfo;
+                 $users_info->user_id = $insertedData->id;
+                 $users_info->total_points = $users_info->total_points + $activity_points->points;
+                 $users_info->save();
+                // dd($users_info);
+            }
+
+            if(!$activity = UserActivity::where('user_id',$insertedData->id)->where('activity_id',4)->where('created_at','>=',date("Y-m-d"))->first())
+            {    
+                $activity = new UserActivity;
+                $activity->user_id = $insertedData->id;
+                $activity->activity_id = 4;
+                $activity_points = Activity::select('points')->where('id','4')->first();
+                $activity->points = $activity_points->points;
+                $activity->save();
+
+
+                if(!$users_info = UsersInfo::where('user_id',$insertedData->id)->first())
+                 $users_info = new UsersInfo;
+                 $users_info->user_id = $insertedData->id;
+                 $users_info->total_points = $users_info->total_points + $activity_points->points;
+                 $users_info->save();
+                // dd($users_info);
+            }
             return Response::json(['success' => '1']);
 
         }
