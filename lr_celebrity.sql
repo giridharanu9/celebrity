@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 12, 2018 at 07:44 PM
+-- Generation Time: Nov 14, 2018 at 03:14 PM
 -- Server version: 5.7.24-0ubuntu0.16.04.1
 -- PHP Version: 7.1.23-2+ubuntu16.04.1+deb.sury.org+1
 
@@ -172,6 +172,30 @@ INSERT INTO `celeb_activity` (`id`, `user_id`, `celebrity_id`, `total_likes`, `t
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `parent_id` int(10) UNSIGNED DEFAULT NULL,
+  `body` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `commentable_id` int(10) UNSIGNED NOT NULL,
+  `commentable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `user_id`, `parent_id`, `body`, `commentable_id`, `commentable_type`, `created_at`, `updated_at`) VALUES
+(17, 46, NULL, 'test comment', 14, 'App\\Celebrity', '2018-11-14 04:07:59', '2018-11-14 04:07:59');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `favorites`
 --
 
@@ -258,7 +282,8 @@ CREATE TABLE `migrations` (
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2014_10_12_000000_create_users_table', 1),
-(2, '2014_10_12_100000_create_password_resets_table', 1);
+(2, '2014_10_12_100000_create_password_resets_table', 1),
+(3, '2018_11_13_091139_create_comments_table', 2);
 
 -- --------------------------------------------------------
 
@@ -627,7 +652,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `type`, `referel_code`, `reference_code`, `provider`, `provider_id`, `remember_token`, `created_at`, `updated_at`) VALUES
 (16, 'Abhi', 'user@gmail.com', '$2y$10$OqSfPL17Px7W6/7mAOcii.nhsOTzcQS6aDG9uy2P4Jc..alMV7mdu', '2', '5bb72d6c5903e', NULL, NULL, NULL, 'j5QyjjjyBX879Auk4C4VEcmQWw92VZMYUJOwBxbE1pKWmFD6ztJmJen4t1IP', '2018-10-05 03:52:52', '2018-10-05 03:52:52'),
-(2, 'Admin', 'admin@gmail.com', '$2y$10$1kgWd3kXbuMTrAEywjo7suTaL2A4DO/2mS/C.WmGOd.CpUlXPclAO', '1', '5ba8a3f063bce', '', NULL, NULL, '2uVUChRuJG4tg2w2ohS5LxuuJ86sFXWh3pJpc1qVC5S8e2gsHHIMjQbZQI53', '2018-09-24 03:14:32', '2018-10-30 02:06:13'),
+(2, 'Admin', 'admin@gmail.com', '$2y$10$1kgWd3kXbuMTrAEywjo7suTaL2A4DO/2mS/C.WmGOd.CpUlXPclAO', '1', '5ba8a3f063bce', '', NULL, NULL, 'LGdO8ucWdYodzcVkihaUp6Gq5zTUAiqtuaqlnZhhg8Nrn0zACBm3Oem2kveX', '2018-09-24 03:14:32', '2018-10-30 02:06:13'),
 (6, 'Abhay', 'abhay@gmail.com', '$2y$10$85.a2PfpZcfHTt9SWUoEL.N.QQiGy6YAIXcZpdnbtbZk4HZ8AMMOq', '2', '5bacab3fb3783', '', NULL, NULL, 'xv1By7Z5GfAOkarkQB4odWwIFXAPwpXWjGpQo6SI7tcOKD2Bc8e8jRcPxj7Y', '2018-09-27 04:34:47', '2018-09-27 04:34:47'),
 (5, 'Nikhil Pansare', 'npansare0@gmail.com', '', '', '', '', 'facebook', '1748197041927784', '5EEfkTc8ci3Q2MG2w5o7S7fx0h6pvrhzjaBuIBOsU7iR3UDMKzB36q0bioZR', '2018-09-27 00:30:10', '2018-09-27 00:30:10'),
 (17, 'Aishwarya', 'aishulanke6@gmail.com', '$2y$10$aPkWFFMUBRgnUSxwde.AneJlMHuDb22EDDQBnLUCMOY2tFxDDmncq', '2', '5bb73081b594c', '5bacab3fb3783', NULL, NULL, 'NQd0HniGRWeeAT1GWKYPe3pmzxLw4lucNUYnwtYmO8StYo5NIthrDU1deDKA', '2018-10-05 04:06:01', '2018-10-05 04:10:54'),
@@ -641,7 +666,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `type`, `referel_code`, 
 (50, 'ashish', 'test1232211@test.com', '$2y$10$9elFo0R.Sg6xNOOUK2bvYOGnPg8WtIMWHTuFXBVVHhf0JSQxqFuZG', '2', '5be1282745265', NULL, NULL, NULL, NULL, '2018-11-06 00:05:35', '2018-11-06 00:05:35'),
 (49, 'ashish', '111ashishk.upadhyaya@synergytop.com', '$2y$10$LJuU0miFEIwBjHhjr1gd8uF.zJkrlQXPbnrQ27wkvZeMzVo/JhfTW', '2', '5be1277e9e0bf', NULL, NULL, NULL, NULL, '2018-11-06 00:02:46', '2018-11-06 00:02:46'),
 (48, 'ashish', 'ashishk.upadhyaya11@synergytop.com', '$2y$10$AixybnKF2Sp7Ughfs7xP9uREoieiLyk.8tv8LWYPFedqlHiaO418.', '2', '5be127248509f', NULL, NULL, NULL, NULL, '2018-11-06 00:01:16', '2018-11-06 00:01:16'),
-(46, 'ashish', 'ashishk.synergytop@gmail.com', '$2y$10$IihC2LmvZNpl/snPBt2UgOr6b3snUiR3lG.aFAqPZk6/TROerj0Na', '2', '5be123dfcb89e', NULL, NULL, NULL, 'uDDMVqlTO3OTstVR2u1Z3y902g7XSGnlZNtAkTidxCHVbsHeeEqpzgup7ibM', '2018-11-05 23:47:19', '2018-11-05 23:47:19'),
+(46, 'ashish', 'ashishk.synergytop@gmail.com', '$2y$10$IihC2LmvZNpl/snPBt2UgOr6b3snUiR3lG.aFAqPZk6/TROerj0Na', '2', '5be123dfcb89e', NULL, NULL, NULL, 'mPqN2otEuedb7fds1Qk0Wd9Oh0B1FFvuXir7JZGC6oLzRsImRWJtFJXGIK0B', '2018-11-05 23:47:19', '2018-11-05 23:47:19'),
 (47, 'ashish', 'ashishk.upadhyaya@synergytop.com', '$2y$10$fhBbKlPrctB4vZ1VWGuQB.a4h1D.CbPbWftAuCUM5gx/cOw1kU/0G', '2', '5be126bb5d867', NULL, NULL, NULL, NULL, '2018-11-05 23:59:31', '2018-11-05 23:59:31');
 
 -- --------------------------------------------------------
@@ -1093,6 +1118,12 @@ ALTER TABLE `celeb_activity`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `favorites`
 --
 ALTER TABLE `favorites`
@@ -1226,6 +1257,11 @@ ALTER TABLE `celebrities`
 ALTER TABLE `celeb_activity`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+--
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
@@ -1244,7 +1280,7 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `pages`
 --

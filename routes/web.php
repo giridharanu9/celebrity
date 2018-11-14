@@ -109,6 +109,10 @@ Route::get('celeb_dislike/{id}','Admin\FrontEndController@celebDislike');
 Route::get('celeb_follow/{id}','Admin\FrontEndController@celebFollow');
 Route::get('celeb_unfollow/{id}','Admin\FrontEndController@celebUnfollow');
 Route::post('rating/{id}', 'Admin\FrontEndController@rating');
+
+Route::post('/comment/store', 'CommentController@store')->name('comment.add');
+Route::post('/reply/store', 'CommentController@replyStore')->name('reply.add');
+
 });
 
 Route::get('invite_friends/{id}','Admin\FrontEndController@inviteFriends');
@@ -152,3 +156,7 @@ Route::get('advertisement_with_us', 'Admin\FrontPageController@getAdvertisement'
 
 ##Export csv in bulk
 Route::post('export_csv', 'Admin\FrontPageController@exportCsv');
+
+
+
+

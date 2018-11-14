@@ -37,6 +37,9 @@ class FrontEndController extends Controller
 		// $like = Likes::where('celebrity_id',$id)->where('user_id',\Auth::user()->id)->first();
 		// $follow = Follow::where('celebrity_id',$id)->where('user_id',\Auth::user()->id)->first();
 		// $favorites = Favorites::where('celebrity_id',$id)->where('user_id',\Auth::user()->id)->first();
+       // dd($celebrity);
+       // echo "<pre>";
+        //print_r($celebrity->comments);
 
 		$like = Likes::where('celebrity_id',$id)->first();
 		$categories = Category::get();

@@ -591,8 +591,31 @@
 	@endif
     </div>
 </div>
+<style>
+    .display-comment .display-comment {
+        margin-left: 40px
+    }
+</style>
 
-
+<div class="row">
+	<div class="col-md-8">
+		
+		<h4>Display Comments</h4>
+        @include('partials._comment_replies', ['comments' => $celebrity->comments, 'post_id' => $celebrity->id])
+        <hr />
+        <h4>Add comment</h4>
+        <form method="post" action="{{ route('comment.add') }}">
+            @csrf
+            <div class="form-group">
+                <input type="text" name="comment_body" class="form-control" />
+                <input type="hidden" name="post_id" value="{{ $celebrity->id }}" />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-warning" value="Add Comment" />
+            </div>
+        </form>
+	</div>
+</div>
 <div class="col-md-2"><br>
 	@include('Frontend.sidebar')
 </div>

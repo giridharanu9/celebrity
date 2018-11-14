@@ -9,7 +9,7 @@ use App\Favorites;
 use App\Follow;
 use App\Ratings;
 use Carbon\Carbon;
-
+use App\Comment;
 class Celebrity extends Authenticatable
 {
     use Notifiable;
@@ -155,5 +155,19 @@ class Celebrity extends Authenticatable
      public static function getRatingCount($id,$question_id)
     {
         return round( Ratings::where('celebrity_id',$id)->where('question_id',$question_id)->avg('ratings') );
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+    public function comments()
+    {
+        //echo "ashish";;
+        return $this->morphMany(Comment::class, 'commentable')
+        ->whereNull('parent_id');
+        //->AWhere('parent_id', 0);
+        //->orWhere('parent_id', 0);
+       // return $this->hasMany('App\Comment', 'commentable_id')->whereNull('parent_id');
     }
 }
